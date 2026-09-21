@@ -11,11 +11,11 @@
   },
   "dependencies": {
     "probot": "^13.0.0",
-    "@clipcode/core": "workspace:*",
-    "@clipcode/analyzer": "workspace:*",
-    "@clipcode/crawler": "workspace:*",
-    "@clipcode/queue": "workspace:*",
-    "@clipcode/db": "workspace:*"
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.9.0",
-    "@clipcode/core": "workspace:*"
+    "@clipcode/core": "^0.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

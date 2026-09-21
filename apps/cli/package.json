@@ -19,12 +19,12 @@
     "ora": "^8.0.0",
     "prompts": "^2.4.2",
     "yaml": "^2.4.0",
-    "@clipcode/core": "workspace:*",
-    "@clipcode/analyzer": "workspace:*",
-    "@clipcode/crawler": "workspace:*",
-    "@clipcode/templates": "workspace:*",
-    "@clipcode/queue": "workspace:*",
-    "@clipcode/db": "workspace:*"
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

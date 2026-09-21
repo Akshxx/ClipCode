@@ -18,7 +18,7 @@
     "db:studio": "turbo run db:studio",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "pnpm build && changeset publish"
+    "release": "npm run build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
@@ -30,6 +30,5 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "packageManager": "pnpm@8.15.0"
+  }
 }

@@ -21,8 +21,8 @@
   "dependencies": {
     "bullmq": "^5.0.0",
     "ioredis": "^5.3.0",
-    "@clipcode/core": "workspace:*",
-    "@clipcode/db": "workspace:*"
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

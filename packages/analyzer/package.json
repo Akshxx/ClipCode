@@ -21,7 +21,7 @@
   "dependencies": {
     "ts-morph": "^21.0.0",
     "simple-git": "^3.22.0",
-    "@clipcode/core": "workspace:*"
+    "@clipcode/core": "^0.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

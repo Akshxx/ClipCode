@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@clipcode/queue": "workspace:*",
-    "@clipcode/db": "workspace:*"
+    "@clipcode/core": "^0.0.0",
+    "@clipcode/core": "^0.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

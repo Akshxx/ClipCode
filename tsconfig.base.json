@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@clipcode/core": ["packages/core/src"],
+      "@clipcode/analyzer": ["packages/analyzer/src"],
+      "@clipcode/crawler": ["packages/crawler/src"],
+      "@clipcode/templates": ["packages/templates/src"],
+      "@clipcode/queue": ["packages/queue/src"],
+      "@clipcode/db": ["packages/db/src"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build", "**/dist/**", "**/build/**"]
+}

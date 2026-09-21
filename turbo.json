@@ -1,0 +1,35 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "build/**"],
+      "cache": true
+    },
+    "lint": {
+      "outputs": [],
+      "cache": true
+    },
+    "typecheck": {
+      "outputs": [],
+      "cache": true
+    },
+    "test": {
+      "outputs": ["coverage/**"],
+      "cache": true
+    },
+    "db:generate": {
+      "outputs": ["node_modules/.prisma/**"],
+      "cache": true
+    },
+    "db:push": {
+      "outputs": [],
+      "cache": false
+    },
+    "db:studio": {
+      "outputs": [],
+      "cache": false
+    }
+  },
+  "globalEnv": ["DATABASE_URL", "REDIS_URL", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY"]
+}

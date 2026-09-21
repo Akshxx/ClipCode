@@ -1,0 +1,37 @@
+{
+  "name": "@clipcode/cli",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "clipcode": "./bin/clipcode.js"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x bin/clipcode.js",
+    "dev": "tsc --watch",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "ink": "^4.4.0",
+    "react": "^18.2.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.0",
+    "prompts": "^2.4.2",
+    "yaml": "^2.4.0",
+    "@clipcode/core": "workspace:*",
+    "@clipcode/analyzer": "workspace:*",
+    "@clipcode/crawler": "workspace:*",
+    "@clipcode/templates": "workspace:*",
+    "@clipcode/queue": "workspace:*",
+    "@clipcode/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/prompts": "^2.4.9",
+    "@types/react": "^18.2.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.0"
+  }
+}

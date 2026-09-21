@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  repoUrl     String?
+  liveUrl     String?
+  ownerId     String
+  owner       User      @relation(fields: [ownerId], references: [id])
+  analyses    Analysis[]
+  renders     Render[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([ownerId])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  tier          Tier      @default(FREE)
+  quota         Json      @default('{"quickCrawls": 50, "fullCrawls": 5, "renders": 100}')
+  projects      Project[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Analysis {
+  id        String        @id @default(cuid())
+  projectId String
+  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type      AnalysisType
+  data      Json
+  createdAt DateTime      @default(now())
+
+  @@index([projectId])
+}
+
+model Render {
+  id          String      @id @default(cuid())
+  projectId   String
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  template    String
+  config      Json
+  status      RenderStatus @default(QUEUED)
+  videoUrl    String?
+  hostedUrl   String?
+  duration    Int?
+  resolution  String?
+  watermark   Boolean     @default(true)
+  error       String?
+  createdAt   DateTime    @default(now())
+  completedAt DateTime?
+
+  @@index([projectId])
+  @@index([status])
+}
+
+enum AnalysisType {
+  REPO
+  LIVE_CRAWL
+  HYBRID
+}
+
+enum RenderStatus {
+  QUEUED
+  RENDERING
+  COMPLETED
+  FAILED
+}
+
+enum Tier {
+  FREE
+  PRO
+  ENTERPRISE
+}

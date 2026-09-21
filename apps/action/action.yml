@@ -1,0 +1,29 @@
+name: 'ClipCode Generate'
+description: 'Generate a 30s launch video from your repository'
+author: 'ClipCode'
+branding:
+  icon: 'video'
+  color: 'purple'
+inputs:
+  template:
+    description: 'Template to use'
+    required: false
+    default: 'social-30s'
+  live-url:
+    description: 'Live deployed URL for crawl'
+    required: false
+    default: ''
+  crawl-depth:
+    description: 'Crawl depth: quick | full'
+    required: false
+    default: 'quick'
+  output-dir:
+    description: 'Output directory'
+    required: false
+    default: 'clipcode-output'
+outputs:
+  video-path:
+    description: 'Path to generated video'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

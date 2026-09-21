@@ -1,0 +1,42 @@
+{
+  "name": "@clipcode/templates",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./social-30s": {
+      "types": "./dist/social-30s/index.d.ts",
+      "import": "./dist/social-30s/index.mjs",
+      "require": "./dist/social-30s/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc && tsc -p tsconfig.remotion.json",
+    "dev": "tsc --watch",
+    "lint": "eslint src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "remotion": "^4.0.0",
+    "@remotion/player": "^4.0.0",
+    "zod": "^3.22.4",
+    "@clipcode/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@remotion/bundler": "^4.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.0"
+  }
+}

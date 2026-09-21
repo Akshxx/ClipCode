@@ -1,0 +1,26 @@
+{
+  "name": "@clipcode/app",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "probot": "^13.0.0",
+    "@clipcode/core": "workspace:*",
+    "@clipcode/analyzer": "workspace:*",
+    "@clipcode/crawler": "workspace:*",
+    "@clipcode/queue": "workspace:*",
+    "@clipcode/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.0"
+  }
+}

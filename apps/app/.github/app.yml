@@ -1,0 +1,19 @@
+name: ClipCode
+description: 'Turn any repo into a launch video. One command. 30 seconds. Free forever.'
+url: https://clipcode.dev
+icon: https://clipcode.dev/icon.png
+
+permissions:
+  contents: read
+  issues: write
+  metadata: read
+  pull_requests: read
+
+events:
+  - issue_comment
+  - installation
+  - installation_repositories
+
+default_permissions:
+  contents: read
+  issues: write

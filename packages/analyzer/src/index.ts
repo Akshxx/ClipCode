@@ -124,7 +124,7 @@ export class RepoAnalyzer {
       throw new Error(`Ollama error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { response: string };
     return data.response;
   }
 
@@ -148,7 +148,7 @@ export class RepoAnalyzer {
       throw new Error(`OpenAI error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { choices: Array<{ message: { content: string } }> };
     return data.choices[0].message.content;
   }
 
@@ -171,7 +171,7 @@ export class RepoAnalyzer {
       throw new Error(`Anthropic error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { content: Array<{ text: string }> };
     return data.content[0].text;
   }
 

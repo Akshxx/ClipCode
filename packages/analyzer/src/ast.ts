@@ -1,6 +1,6 @@
 import { Project, SourceFile, SyntaxKind, Node } from 'ts-morph';
 import { join, relative, dirname } from 'path';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import type {
   RepoAnalysis,
   RouteInfo,
@@ -20,7 +20,6 @@ export class AstAnalyzer {
     this.project = new Project({
       tsConfigFilePath: join(rootPath, 'tsconfig.json'),
       skipAddingFilesFromTsConfig: true,
-      addFilesFromTsConfig: false,
     });
   }
 
@@ -30,7 +29,7 @@ export class AstAnalyzer {
       throw new Error('package.json not found');
     }
 
-    const packageJson = JSON.parse(await Bun.file(packageJsonPath).text());
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     const framework = this.detectFramework(packageJson);
 
     this.addSourceFiles();

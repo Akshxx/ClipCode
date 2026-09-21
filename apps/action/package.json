@@ -1,7 +1,6 @@
 {
   "name": "@clipcode/action",
   "version": "0.0.0",
-  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc && ncc build dist/index.js -o dist --minify",

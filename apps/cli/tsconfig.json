@@ -3,11 +3,12 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "composite": true,
-    "tsBuildInfoFile": "dist/tsbuildinfo",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "jsx": "react-jsx",
     "lib": ["ES2022"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "bin"]
+  "exclude": ["node_modules", "dist", "bin", "**/dist/**", "**/build/**"]
 }

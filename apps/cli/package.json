@@ -1,7 +1,6 @@
 {
   "name": "@clipcode/cli",
   "version": "0.0.0",
-  "private": true,
   "bin": {
     "clipcode": "./bin/clipcode.js"
   },

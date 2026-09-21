@@ -1,6 +1,22 @@
-import { simpleGit, SimpleGit } from 'simple-git';
+import { simpleGit, SimpleGit, ListLogLine } from 'simple-git';
 import { join } from 'path';
 import type { Release } from '@clipcode/core';
+
+interface GitHubRepo {
+  stargazers_count?: number;
+  forks_count?: number;
+}
+
+interface GitHubContributor {
+  login: string;
+}
+
+interface GitHubRelease {
+  tag_name: string;
+  name?: string;
+  published_at: string;
+  html_url: string;
+}
 
 export class GitAnalyzer {
   private git: SimpleGit;
@@ -42,7 +58,7 @@ export class GitAnalyzer {
         headers: { Accept: 'application/vnd.github.v3+json' },
       });
       if (!response.ok) return 0;
-      const data = await response.json();
+      const data = await response.json() as GitHubRepo;
       return data.stargazers_count || 0;
     } catch {
       return 0;
@@ -62,7 +78,7 @@ export class GitAnalyzer {
         headers: { Accept: 'application/vnd.github.v3+json' },
       });
       if (!response.ok) return 0;
-      const data = await response.json();
+      const data = await response.json() as GitHubRepo;
       return data.forks_count || 0;
     } catch {
       return 0;
@@ -82,7 +98,7 @@ export class GitAnalyzer {
         headers: { Accept: 'application/vnd.github.v3+json' },
       });
       if (!response.ok) return 0;
-      const data = await response.json();
+      const data = await response.json() as GitHubContributor[];
       return Array.isArray(data) ? data.length : 0;
     } catch {
       return 0;
@@ -102,9 +118,9 @@ export class GitAnalyzer {
         headers: { Accept: 'application/vnd.github.v3+json' },
       });
       if (!response.ok) return [];
-      const data = await response.json();
+      const data = await response.json() as GitHubRelease[];
 
-      return (data as any[]).map((r) => ({
+      return data.map((r) => ({
         tag: r.tag_name,
         name: r.name || r.tag_name,
         date: r.published_at,
@@ -120,7 +136,7 @@ export class GitAnalyzer {
       const log = await this.git.log({ maxCount: 100, format: '%ai' });
       if (!log.all.length) return 0;
 
-      const dates = log.all.map((c) => new Date(c.date).getTime()).sort((a, b) => b - a);
+      const dates = log.all.map((c: ListLogLine) => new Date(c.date).getTime()).sort((a, b) => b - a);
       const now = Date.now();
       const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
 

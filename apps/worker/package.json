@@ -1,7 +1,6 @@
 {
   "name": "@clipcode/worker",
   "version": "0.0.0",
-  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",

@@ -23,7 +23,7 @@ PROJECT INFO:
 - Tech Stack: ${techStack.join(', ')}
 - Key Features: ${keyFeatures.join(', ')}
 - Routes: ${repo.routes.slice(0, 10).map(r => r.path).join(', ')}
-- API Endpoints: ${repo.apiEndpoints.slice(0, 10).map(e => \`\${e.method} \${e.path}\`).join(', ')}
+- API Endpoints: ${repo.apiEndpoints.slice(0, 10).map(e => e.method + ' ' + e.path).join(', ')}
 
 LIVE CRAWL DATA:
 ${liveInfo}

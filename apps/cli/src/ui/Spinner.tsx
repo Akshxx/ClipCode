@@ -37,16 +37,16 @@ export const Panel: React.FC<PanelProps> = ({ title, items }) => (
 );
 
 export const success = (title: string, items: string[]) => {
-  const lines = [`✅ ${title}`, ...items.map(i => `  ${i}`)];
+  const lines = [`[OK] ${title}`, ...items.map(i => `  ${i}`)];
   return lines.join('\n');
 };
 
 export const info = (title: string, items: string[]) => {
-  const lines = [`ℹ️  ${title}`, ...items.map(i => `  ${i}`)];
+  const lines = [`[Info] ${title}`, ...items.map(i => `  ${i}`)];
   return lines.join('\n');
 };
 
 export const error = (title: string, items: string[]) => {
-  const lines = [`❌ ${title}`, ...items.map(i => `  ${i}`)];
+  const lines = [`[Error] ${title}`, ...items.map(i => `  ${i}`)];
   return lines.join('\n');
 };

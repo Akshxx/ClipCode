@@ -43,9 +43,9 @@ CREATE A JSON OBJECT with these exact fields:
     "tagline": "One compelling tagline under 150 chars. What does this do?"
   },
   "features": [
-    {"title": "Feature 1", "desc": "Brief benefit-focused description", "icon": "⚡"},
-    {"title": "Feature 2", "desc": "Brief benefit-focused description", "icon": "🚀"},
-    {"title": "Feature 3", "desc": "Brief benefit-focused description", "icon": "🔒"}
+    {"title": "Feature 1", "desc": "Brief benefit-focused description", "icon": "spark"},
+    {"title": "Feature 2", "desc": "Brief benefit-focused description", "icon": "rocket"},
+    {"title": "Feature 3", "desc": "Brief benefit-focused description", "icon": "lock"}
   ],
   "demo": {
     "recordingUrl": "LIVE_RECORDING_PLACEHOLDER",
@@ -63,7 +63,7 @@ RULES:
 - Features must be actual features from the code, not generic
 - Tagline must be specific to THIS project
 - Problem must be a real pain point developers have
-- Icons should be relevant emojis
+- Icons should be relevant text identifiers (e.g., "spark", "rocket", "lock")
 - Terminal commands should be realistic for this project
 - Output ONLY valid JSON, no markdown, no explanation`;
 }

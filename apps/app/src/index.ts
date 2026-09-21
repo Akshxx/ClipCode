@@ -19,7 +19,7 @@ export default (app: Probot) => {
     if (issue.pull_request) {
       return context.octokit.issues.createComment(context.repo({
         issue_number: issue.number,
-        body: '❌ ClipCode commands only work on issues, not pull requests.',
+        body: '[Error] ClipCode commands only work on issues, not pull requests.',
       }));
     }
 
@@ -27,7 +27,7 @@ export default (app: Probot) => {
     if (!hasWriteAccess) {
       return context.octokit.issues.createComment(context.repo({
         issue_number: issue.number,
-        body: '❌ You need write access to this repository to use ClipCode.',
+        body: '[Error] You need write access to this repository to use ClipCode.',
       }));
     }
 
@@ -50,7 +50,7 @@ export default (app: Probot) => {
 
     await context.octokit.issues.createComment(context.repo({
       issue_number: issue.number,
-      body: `🎬 **ClipCode queued!**\n\nJob ID: \`${jobId}\`\nTemplate: \`${args.template || 'social-30s'}\`\n${args.liveUrl ? `Live URL: ${args.liveUrl}` : ''}\n\nI'll post the video when it's ready.`,
+      body: `ClipCode queued!\n\nJob ID: \`${jobId}\`\nTemplate: \`${args.template || 'social-30s'}\`\n${args.liveUrl ? `Live URL: ${args.liveUrl}` : ''}\n\nI'll post the video when it's ready.`,
     }));
   });
 

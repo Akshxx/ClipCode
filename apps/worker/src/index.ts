@@ -2,14 +2,14 @@ import { startRenderWorker } from '@clipcode/queue/workers/render-worker';
 import { closeRedis, closeQueues } from '@clipcode/queue';
 
 async function main() {
-  console.log('🚀 Starting ClipCode render worker...');
+  console.log('[Start] Starting ClipCode render worker...');
 
   const worker = await startRenderWorker();
 
-  console.log('✅ Render worker started');
+  console.log('[OK] Render worker started');
 
   const shutdown = async () => {
-    console.log('\n🛑 Shutting down...');
+    console.log('\n[Stop] Shutting down...');
     await worker.close();
     await closeQueues();
     await closeRedis();
@@ -21,6 +21,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error('❌ Worker failed:', err);
+  console.error('[Error] Worker failed:', err);
   process.exit(1);
 });

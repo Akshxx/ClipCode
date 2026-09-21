@@ -20,7 +20,7 @@ async function run(): Promise<void> {
     const repoPath = process.env.GITHUB_WORKSPACE || process.cwd();
     const repoUrl = `https://github.com/${github.context.repo.owner}/${github.context.repo.repo}`;
 
-    core.info(`🔍 Analyzing repository: ${repoUrl}`);
+    core.info(`[Analyze] Analyzing repository: ${repoUrl}`);
     const { repo, brief } = await analyzeRepo({
       repoPath,
       meta: {
@@ -33,18 +33,18 @@ async function run(): Promise<void> {
       },
     });
 
-    core.info(`✅ Analyzed: ${repo.framework} framework`);
+    core.info(`[OK] Analyzed: ${repo.framework} framework`);
 
     if (liveUrl) {
-      core.info(`🌐 Crawling live URL: ${liveUrl}`);
+      core.info(`[Crawl] Crawling live URL: ${liveUrl}`);
       const crawlPlan = generateCrawlPlan(repo, liveUrl);
       const liveData = await crawl(crawlPlan);
       brief.reveal.screenshotUrl = liveData.screenshots[0]?.url || brief.reveal.screenshotUrl;
       brief.demo.recordingUrl = liveData.recordings[0]?.url || brief.demo.recordingUrl;
-      core.info(`✅ Crawled ${liveData.screenshots.length} screenshots`);
+      core.info(`[OK] Crawled ${liveData.screenshots.length} screenshots`);
     }
 
-    core.info(`🎬 Rendering video with template: ${template}`);
+    core.info(`[Render] Rendering video with template: ${template}`);
     const renderId = generateId('render-');
     const outputPath = join(outputDir, `${github.context.repo.repo}-30s.mp4`);
     mkdirSync(dirname(outputPath), { recursive: true });
@@ -72,14 +72,14 @@ async function run(): Promise<void> {
       frameRate: 30,
     });
 
-    core.info(`✅ Video saved to ${outputPath}`);
+    core.info(`[OK] Video saved to ${outputPath}`);
     core.setOutput('video-path', outputPath);
 
     const artifactPattern = join(outputDir, '*.mp4');
     const globber = await glob.create(artifactPattern);
     const files = await globber.glob();
     if (files.length > 0) {
-      core.info(`📦 Artifact ready: ${files[0]}`);
+      core.info(`[Artifact] Artifact ready: ${files[0]}`);
     }
   } catch (error) {
     core.setFailed(String(error));

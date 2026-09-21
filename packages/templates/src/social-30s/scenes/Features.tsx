@@ -66,9 +66,9 @@ const FeatureCard: React.FC<{
   });
 
   const icons: Record<string, string> = {
-    '⚡': '⚡', '🚀': '🚀', '🔒': '🔒', '🎯': '🎯',
-    '💡': '💡', '⚙️': '⚙️', '🔧': '🔧', '📦': '📦',
-    '🌐': '🌐', '⚡': '⚡', '🎨': '🎨', '📱': '📱',
+    spark: 'spark', rocket: 'rocket', lock: 'lock', target: 'target',
+    bulb: 'bulb', gear: 'gear', tool: 'tool', box: 'box',
+    globe: 'globe', art: 'art', phone: 'phone',
   };
 
   return (
@@ -90,7 +90,7 @@ const FeatureCard: React.FC<{
           filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
         }}
       >
-        {icons[feature.icon] || feature.icon || '✨'}
+        {icons[feature.icon] || feature.icon || 'star'}
       </div>
       <h3
         style={{

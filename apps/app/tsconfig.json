@@ -5,7 +5,17 @@
     "rootDir": "src",
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "noEmit": false,
+    "paths": {
+      "@clipcode/core": ["../../packages/core/src"],
+      "@clipcode/analyzer": ["../../packages/analyzer/src"],
+      "@clipcode/crawler": ["../../packages/crawler/src"],
+      "@clipcode/templates": ["../../packages/templates/src"],
+      "@clipcode/queue": ["../../packages/queue/src"],
+      "@clipcode/db": ["../../packages/db/src"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/dist/**", "**/build/**"]

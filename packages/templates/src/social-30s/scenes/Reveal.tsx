@@ -1,5 +1,5 @@
 import React from 'react';
-import { interpolate, spring } from 'remotion';
+import { useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
 
 interface RevealProps {
   data: {
@@ -11,11 +11,12 @@ interface RevealProps {
 }
 
 export const Reveal: React.FC<RevealProps> = ({ data, width, height }) => {
-  const frame = React.useCurrentFrame();
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const progress = React.useMemo(() => interpolate(frame, [0, 150], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }), [frame]);
 
-  const screenshotScale = spring(progress < 0.4 ? progress / 0.4 : 1, { stiffness: 100, damping: 18 });
-  const taglineOpacity = spring(progress > 0.3 ? (progress - 0.3) / 0.7 : 0, { stiffness: 100, damping: 20 });
+  const screenshotScale = spring({ frame, fps, from: 0, to: progress < 0.4 ? progress / 0.4 : 1, config: { stiffness: 100, damping: 18 } });
+  const taglineOpacity = spring({ frame, fps, from: 0, to: progress > 0.3 ? (progress - 0.3) / 0.7 : 0, config: { stiffness: 100, damping: 20 } });
 
   return (
     <div

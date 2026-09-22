@@ -23,6 +23,10 @@ export const Terminal: React.FC<TerminalProps> = ({
   };
   const c = colors[theme];
 
+  const blinkStyle = {
+    animation: 'blink 1s infinite',
+  } as React.CSSProperties;
+
   return (
     <div
       style={{
@@ -52,8 +56,8 @@ export const Terminal: React.FC<TerminalProps> = ({
         ))}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ color: c.prompt }}>{prompt}</span>
-          <span style={{ color: c.text, animation: 'blink 1s infinite' }}>_</span>
-          <style jsx>{`
+          <span style={{ color: c.text, ...blinkStyle }}>_</span>
+          <style>{`
             @keyframes blink {
               0%, 50% { opacity: 1; }
               51%, 100% { opacity: 0; }

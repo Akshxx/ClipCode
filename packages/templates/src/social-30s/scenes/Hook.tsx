@@ -1,6 +1,5 @@
-import React from 'remotion';
-import { interpolate, spring } from 'remotion';
-import { Sequence } from 'remotion';
+import React from 'react';
+import { useVideoConfig, useCurrentFrame, interpolate, spring } from 'remotion';
 
 interface HookProps {
   data: {
@@ -13,12 +12,12 @@ interface HookProps {
 }
 
 export const Hook: React.FC<HookProps> = ({ data, width, height }) => {
-  const { fps } = React.useVideoConfig();
-  const frame = React.useCurrentFrame();
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const progress = React.useMemo(() => interpolate(frame, [0, 90], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }), [frame]);
 
-  const textOpacity = spring(progress < 0.5 ? progress * 2 : 1, { stiffness: 120, damping: 20 });
-  const logoScale = spring(progress < 0.3 ? progress / 0.3 : 1, { stiffness: 150, damping: 15 });
+  const textOpacity = spring({ frame, fps, from: 0, to: progress < 0.5 ? progress * 2 : 1, config: { stiffness: 120, damping: 20 } });
+  const logoScale = spring({ frame, fps, from: 0, to: progress < 0.3 ? progress / 0.3 : 1, config: { stiffness: 150, damping: 15 } });
 
   return (
     <div

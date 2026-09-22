@@ -2,19 +2,73 @@ import { Probot, ProbotOctokit } from 'probot';
 import { crawlQueue } from '@clipcode/queue/queues';
 import { generateId } from '@clipcode/core/utils/helpers';
 
+interface CrawlJobData {
+  jobId: string;
+  repo: string;
+  installationId?: number;
+  issueNumber: number;
+  template?: string;
+  liveUrl?: string;
+  crawlDepth?: string;
+}
+
+interface IssueCommentPayload {
+  body: string;
+  issue: {
+    number: number;
+    pull_request?: { url: string; html_url: string; };
+  };
+  repository: {
+    full_name: string;
+    owner: { login: string };
+    name: string;
+  };
+  sender: {
+    login: string;
+  };
+  installation?: {
+    id: number;
+  };
+  comment?: {
+    id: number;
+  };
+}
+
 export default (app: Probot) => {
   app.log.info('ClipCode GitHub App loaded');
 
   app.on('installation.created', async (context) => {
-    for (const repo of context.payload.repositories) {
+    const repositories = context.payload.repositories || [];
+    for (const repo of repositories) {
       app.log.info(`ClipCode installed on ${repo.full_name}`);
     }
   });
 
   app.on('issue_comment.created', async (context) => {
-    const { body, issue, repository, sender, installation } = context.payload;
+    const payload = context.payload as unknown as {
+      body?: string;
+      issue: {
+        number: number;
+        pull_request?: { url: string; html_url: string; };
+      };
+      repository: {
+        full_name: string;
+        owner: { login: string };
+        name: string;
+      };
+      sender: {
+        login: string;
+      };
+      installation?: {
+        id: number;
+      };
+      comment?: {
+        id: number;
+      };
+    };
+    const { body, issue, repository, sender, installation } = context.payload as any;
 
-    if (!body.trim().startsWith('/clipcode')) return;
+    if (!body?.trim().startsWith('/clipcode')) return;
 
     if (issue.pull_request) {
       return context.octokit.issues.createComment(context.repo({
@@ -31,22 +85,29 @@ export default (app: Probot) => {
       }));
     }
 
-    await context.octokit.reactions.createForIssueComment({
-      ...context.repo(),
-      comment_id: context.payload.comment.id,
-      content: 'eyes',
-    });
+    const commentId = (context.payload as any).comment?.id;
+    if (commentId) {
+      await context.octokit.reactions.createForIssueComment({
+        ...context.repo(),
+        comment_id: commentId,
+        content: 'eyes',
+      });
+    }
 
-    const args = parseSlashCommand(body);
+    const args = parseSlashCommand(payload.body || '');
     const jobId = generateId('job-');
 
-    await crawlQueue.add('generate', {
+    const jobData = {
       jobId,
       repo: repository.full_name,
       installationId: installation?.id,
       issueNumber: issue.number,
-      ...args,
-    });
+      template: args.template,
+      liveUrl: args.liveUrl,
+      crawlDepth: args.crawlDepth,
+    };
+
+    await crawlQueue.add('generate', jobData as any);
 
     await context.octokit.issues.createComment(context.repo({
       issue_number: issue.number,
@@ -59,7 +120,7 @@ export default (app: Probot) => {
   });
 };
 
-async function checkWriteAccess(octokit: ProbotOctokit, repo: { owner: string; repo: string }, username: string): Promise<boolean> {
+async function checkWriteAccess(octokit: any, repo: { owner: string; repo: string }, username: string): Promise<boolean> {
   try {
     const { data: permission } = await octokit.rest.repos.getCollaboratorPermissionLevel({
       ...repo,

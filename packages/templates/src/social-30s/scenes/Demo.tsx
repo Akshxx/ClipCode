@@ -1,18 +1,25 @@
 import React from 'react';
-import { interpolate, spring } from 'remotion';
-import { DemoData } from '@clipcode/core';
+import { useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
 
 interface DemoProps {
-  data: DemoData;
+  data: {
+    recordingUrl?: string;
+    terminalCommands?: string[];
+  };
   width: number;
   height: number;
 }
 
 export const Demo: React.FC<DemoProps> = ({ data, width, height }) => {
-  const frame = React.useCurrentFrame();
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const progress = React.useMemo(() => interpolate(frame, [0, 210], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }), [frame]);
 
   const hasRecording = data.recordingUrl && data.recordingUrl !== 'LIVE_RECORDING_PLACEHOLDER';
+
+  const textOpacity = spring({ frame, fps, from: 0, to: progress < 0.2 ? progress / 0.2 : 1, config: { stiffness: 100, damping: 20 } });
+  const yProgress = interpolate(progress, [0, 0.15], [30, 0], { extrapolateLeft: 'clamp' });
+  const yOffset = spring({ frame, fps, from: 0, to: yProgress, config: { stiffness: 100, damping: 15 } });
 
   return (
     <div
@@ -29,8 +36,8 @@ export const Demo: React.FC<DemoProps> = ({ data, width, height }) => {
     >
       <div
         style={{
-          opacity: spring(progress < 0.2 ? progress / 0.2 : 1, { stiffness: 100, damping: 20 }),
-          transform: `translateY(${spring(interpolate(progress, [0, 0.15], [30, 0], { extrapolateLeft: 'clamp' }), { stiffness: 100, damping: 15 })}px)`,
+          opacity: textOpacity,
+          transform: `translateY(${yOffset}px)`,
           textAlign: 'center',
           marginBottom: 32,
           maxWidth: '80%',
@@ -66,26 +73,31 @@ export const Demo: React.FC<DemoProps> = ({ data, width, height }) => {
           width={width}
           height={height}
           progress={progress}
+          frame={frame}
+          fps={fps}
         />
       ) : (
         <TerminalDemo
           commands={data.terminalCommands || ['npx clipcode generate']}
           width={width}
           progress={progress}
+          frame={frame}
+          fps={fps}
         />
       )}
     </div>
   );
 };
 
-const VideoDemo: React.FC<{ url: string; width: number; height: number; progress: number }> = ({ url, width, height, progress }) => {
-  const videoOpacity = spring(progress > 0.15 ? (progress - 0.15) / 0.85 : 0, { stiffness: 100, damping: 20 });
+const VideoDemo: React.FC<{ url: string; width: number; height: number; progress: number; frame: number; fps: number }> = ({ url, width, height, progress, frame, fps }) => {
+  const videoOpacity = spring({ frame, fps, from: 0, to: progress > 0.15 ? (progress - 0.15) / 0.85 : 0, config: { stiffness: 100, damping: 20 } });
+  const scale = spring({ frame, fps, from: 0, to: progress > 0.15 ? 0.95 + progress * 0.05 : 0.9, config: { stiffness: 100, damping: 15 } });
 
   return (
     <div
       style={{
         opacity: videoOpacity,
-        transform: `scale(${spring(progress > 0.15 ? 0.95 + progress * 0.05 : 0.9, { stiffness: 100, damping: 15 })})`,
+        transform: `scale(${scale})`,
         borderRadius: 16,
         overflow: 'hidden',
         border: '1px solid rgba(255,255,255,0.1)',
@@ -110,16 +122,19 @@ const VideoDemo: React.FC<{ url: string; width: number; height: number; progress
   );
 };
 
-const TerminalDemo: React.FC<{ commands: string[]; width: number; progress: number }> = ({ commands, width, progress }) => {
-  const commandProgress = spring(Math.max(0, (progress - 0.15) / 0.85), { stiffness: 80, damping: 20 });
+const TerminalDemo: React.FC<{ commands: string[]; width: number; progress: number; frame: number; fps: number }> = ({ commands, width, progress, frame, fps }) => {
+  const commandProgress = spring({ frame, fps, from: 0, to: Math.max(0, (progress - 0.15) / 0.85), config: { stiffness: 80, damping: 20 } });
   const currentCommandIndex = Math.floor(commandProgress * commands.length);
   const currentCommandProgress = (commandProgress * commands.length) % 1;
+
+  const textOpacity = spring({ frame, fps, from: 0, to: progress > 0.15 ? (progress - 0.15) / 0.85 : 0, config: { stiffness: 100, damping: 20 } });
+  const scale = spring({ frame, fps, from: 0, to: progress > 0.15 ? 0.95 + progress * 0.05 : 0.9, config: { stiffness: 100, damping: 15 } });
 
   return (
     <div
       style={{
-        opacity: spring(progress > 0.15 ? (progress - 0.15) / 0.85 : 0, { stiffness: 100, damping: 20 }),
-        transform: `scale(${spring(progress > 0.15 ? 0.95 + progress * 0.05 : 0.9, { stiffness: 100, damping: 15 })})`,
+        opacity: textOpacity,
+        transform: `scale(${scale})`,
         borderRadius: 12,
         overflow: 'hidden',
         background: '#1e1e1e',
@@ -149,14 +164,14 @@ const TerminalDemo: React.FC<{ commands: string[]; width: number; progress: numb
               {commands[currentCommandIndex].slice(0, Math.floor(commands[currentCommandIndex].length * currentCommandProgress))}
             </span>
             <span style={{ animation: 'blink 1s infinite', color: '#d4d4d4' }}>_</span>
+            <style>{`
+              @keyframes blink {
+                0%, 50% { opacity: 1; }
+                51%, 100% { opacity: 0; }
+              }
+            `}</style>
           </div>
         )}
-        <style jsx>{`
-          @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-          }
-        `}</style>
       </div>
     </div>
   );

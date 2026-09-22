@@ -1,5 +1,5 @@
 import React from 'react';
-import { interpolate, spring } from 'remotion';
+import { useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
 
 interface PerformanceBadgeProps {
   score: number;
@@ -31,14 +31,11 @@ export const PerformanceBadge: React.FC<PerformanceBadgeProps> = ({
   from = 0,
   durationInFrames = 30,
 }) => {
-  const frame = React.useCurrentFrame();
-  const progress = React.useMemo(
-    () => interpolate(frame - from, [0, durationInFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
-    [frame, from, durationInFrames]
-  );
-
-  const opacity = spring(progress, { stiffness: 150, damping: 20 });
-  const scale = spring(progress, { stiffness: 200, damping: 15 });
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const progress = interpolate(frame - from, [0, durationInFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const opacity = spring({ frame: frame - from, fps, from: 0, to: progress, config: { stiffness: 150, damping: 20 } });
+  const scale = spring({ frame: frame - from, fps, from: 0, to: progress, config: { stiffness: 200, damping: 15 } });
 
   const getColor = (s: number) => {
     if (s >= 90) return '#22c55e';
@@ -57,7 +54,7 @@ export const PerformanceBadge: React.FC<PerformanceBadgeProps> = ({
         position: 'absolute',
         ...pos,
         transform: `scale(${scale})`,
-        opacity,
+        opacity: opacity,
         transformOrigin: position.includes('left') ? 'left' : 'right',
         zIndex: 100,
         pointerEvents: 'none',

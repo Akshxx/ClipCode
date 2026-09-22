@@ -1,6 +1,11 @@
 import React from 'react';
-import { interpolate, spring } from 'remotion';
-import { FeatureData } from '@clipcode/core';
+import { useCurrentFrame, useVideoConfig, Sequence, interpolate, spring } from 'remotion';
+
+interface FeatureData {
+  title: string;
+  desc: string;
+  icon?: string;
+}
 
 interface FeaturesProps {
   data: FeatureData[];
@@ -9,7 +14,7 @@ interface FeaturesProps {
 }
 
 export const Features: React.FC<FeaturesProps> = ({ data, width, height }) => {
-  const frame = React.useCurrentFrame();
+  const frame = useCurrentFrame();
   const featureDuration = 100;
 
   return (
@@ -47,7 +52,8 @@ const FeatureCard: React.FC<{
   height: number;
   featureDuration: number;
 }> = ({ feature, index, width, height, featureDuration }) => {
-  const frame = React.useCurrentFrame();
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const progress = React.useMemo(
     () => interpolate(frame - index * featureDuration, [0, featureDuration], [0, 1], {
       extrapolateLeft: 'clamp',
@@ -56,20 +62,16 @@ const FeatureCard: React.FC<{
     [frame, index, featureDuration]
   );
 
-  const cardOpacity = spring(progress < 0.2 ? progress / 0.2 : progress > 0.8 ? (1 - progress) / 0.2 : 1, {
-    stiffness: 120,
-    damping: 20,
-  });
-  const cardY = spring(interpolate(progress, [0, 0.15, 0.85, 1], [40, 0, 0, -40], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }), {
-    stiffness: 100,
-    damping: 15,
-  });
+  const cardOpacity = spring({ frame, fps, from: 0, to: progress < 0.2 ? progress / 0.2 : progress > 0.8 ? (1 - progress) / 0.2 : 1, config: { stiffness: 120, damping: 20 } });
+  const cardY = spring({ frame, fps, from: 0, to: interpolate(progress, [0, 0.15, 0.85, 1], [40, 0, 0, -40], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }), config: { stiffness: 100, damping: 15 } });
 
   const icons: Record<string, string> = {
-    spark: 'spark', rocket: 'rocket', lock: 'lock', target: 'target',
-    bulb: 'bulb', gear: 'gear', tool: 'tool', box: 'box',
-    globe: 'globe', art: 'art', phone: 'phone',
+    spark: '⚡', rocket: '🚀', lock: '🔒', target: '🎯',
+    bulb: '💡', gear: '⚙️', tool: '🔧', box: '📦',
+    globe: '🌐', art: '🎨', phone: '📱',
   };
+
+  const icon = feature.icon ? icons[feature.icon] : '✨';
 
   return (
     <div
@@ -90,7 +92,7 @@ const FeatureCard: React.FC<{
           filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
         }}
       >
-        {icons[feature.icon] || feature.icon || 'star'}
+        {icon}
       </div>
       <h3
         style={{

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, Flex } from 'ink';
+import { Box, Text } from 'ink';
 
 interface SpinnerProps {
   children: React.ReactNode;
@@ -15,10 +15,10 @@ export const Spinner: React.FC<SpinnerProps> = ({ children }) => {
   }, []);
 
   return (
-    <Flex gap={1}>
+    <Box flexDirection="row" gap={1}>
       <Text color="cyan">{frames[frame]}</Text>
       <Text>{children}</Text>
-    </Flex>
+    </Box>
   );
 };
 
@@ -31,7 +31,9 @@ export const Panel: React.FC<PanelProps> = ({ title, items }) => (
   <Box flexDirection="column" marginTop={1} marginBottom={1} borderStyle="round" borderColor="gray" paddingX={2} paddingY={1}>
     <Text bold color="white">{title}</Text>
     {items.map((item, i) => (
-      <Text key={i} marginTop={1} color="gray">  {item}</Text>
+      <Box key={i} marginTop={1}>
+        <Text color="gray">  {item}</Text>
+      </Box>
     ))}
   </Box>
 );

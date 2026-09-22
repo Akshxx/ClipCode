@@ -3,12 +3,12 @@ import * as github from '@actions/github';
 import * as glob from '@actions/glob';
 import { analyzeRepo } from '@clipcode/analyzer';
 import { generateCrawlPlan, crawl } from '@clipcode/crawler';
-import { renderMedia, selectComposition, bundle } from '@remotion/renderer';
-import { Social30sComposition } from '@clipcode/templates';
-import { writeFileSync, mkdirSync, existsSync } from 'fs';
-import { join, dirname, resolve } from 'path';
+import { renderMedia, selectComposition } from '@remotion/renderer';
+import { bundle } from '@remotion/bundler';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
 import { tmpdir } from 'os';
-import { generateId } from '@clipcode/core/utils/helpers';
+import { generateId } from '@clipcode/core';
 
 async function run(): Promise<void> {
   try {
@@ -66,10 +66,6 @@ async function run(): Promise<void> {
       inputProps: brief,
       codec: 'h264',
       crf: 23,
-      preset: 'medium',
-      width: 1080,
-      height: 1920,
-      frameRate: 30,
     });
 
     core.info(`[OK] Video saved to ${outputPath}`);

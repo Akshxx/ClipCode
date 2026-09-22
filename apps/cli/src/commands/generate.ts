@@ -1,15 +1,14 @@
 import { Command } from 'commander';
-import { Spinner } from '../ui/Spinner';
-import { Panel } from '../ui/Panel';
+import { Spinner, Panel, success } from '../ui/Spinner';
 import { analyzeRepo } from '@clipcode/analyzer';
 import { generateCrawlPlan, crawl } from '@clipcode/crawler';
-import { renderMedia, selectComposition, bundle } from '@remotion/renderer';
-import { Social30sComposition } from '@clipcode/templates';
+import { renderMedia, selectComposition } from '@remotion/renderer';
+import { bundle } from '@remotion/bundler';
 import { PrismaClient } from '@clipcode/db';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname, resolve } from 'path';
 import { tmpdir } from 'os';
-import { generateId } from '@clipcode/core/utils/helpers';
+import { generateId } from '@clipcode/core';
 import prompts from 'prompts';
 import chalk from 'chalk';
 import ora from 'ora';
@@ -25,7 +24,7 @@ export const generateCommand = new Command('generate')
   .option('--api-key <key>', 'LLM API key (OpenAI/Anthropic)')
   .option('--provider <provider>', 'LLM provider: ollama | openai | anthropic', 'ollama')
   .action(async (options) => {
-    const spinner = new Spinner();
+    const spinner = ora('Analyzing repository...').start();
     const repoPath = resolve(process.cwd());
 
     try {
@@ -90,10 +89,6 @@ export const generateCommand = new Command('generate')
         inputProps: brief,
         codec: 'h264',
         crf: 23,
-        preset: 'medium',
-        width: 1080,
-        height: 1920,
-        frameRate: 30,
       });
 
       spinner.succeed(`Video saved to ${chalk.cyan(outputPath)}`);
@@ -112,14 +107,14 @@ export const generateCommand = new Command('generate')
       if (options.json) {
         console.log(JSON.stringify({ renderId: render.id, outputPath, brief }, null, 2));
       } else {
-        console.log(Panel.success('Done!', [
+        console.log(success('Done!', [
           `Video: ${chalk.cyan(outputPath)}`,
           `Duration: 30s | 1080x1920 | 30fps`,
           `Template: social-30s`,
         ]));
       }
     } catch (error) {
-      spinner.fail(String(error));
+      ora().fail(String(error));
       process.exit(1);
     }
   });

@@ -1,7 +1,7 @@
-import { Social30sSchema, Social30sData } from '@clipcode/core';
+import { Social30sData } from '@clipcode/core';
 
-export { Social30sSchema };
-export type { Social30sData };
+export { Social30sSchema } from '@clipcode/core';
+export type { Social30sData } from '@clipcode/core';
 
 export const defaultSocial30sData: Social30sData = {
   hook: {

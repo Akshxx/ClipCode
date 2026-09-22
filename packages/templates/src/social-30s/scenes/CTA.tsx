@@ -1,19 +1,26 @@
 import React from 'react';
-import { interpolate, spring } from 'remotion';
-import { CtaData } from '@clipcode/core';
+import { useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
 
 interface CTAProps {
-  data: CtaData;
+  data: {
+    githubUrl: string;
+    stars: number;
+    liveUrl?: string;
+  };
   width: number;
   height: number;
 }
 
 export const CTA: React.FC<CTAProps> = ({ data, width, height }) => {
-  const frame = React.useCurrentFrame();
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const progress = React.useMemo(() => interpolate(frame, [0, 150], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }), [frame]);
 
-  const contentOpacity = spring(progress < 0.4 ? progress / 0.4 : 1, { stiffness: 100, damping: 20 });
-  const buttonScale = spring(progress > 0.6 ? Math.min(1, (progress - 0.6) / 0.4) : 0, { stiffness: 200, damping: 15 });
+  const contentOpacity = spring({ frame, fps, from: 0, to: progress < 0.4 ? progress / 0.4 : 1, config: { stiffness: 100, damping: 20 } });
+  const buttonScale = spring({ frame, fps, from: 0, to: progress > 0.6 ? Math.min(1, (progress - 0.6) / 0.4) : 0, config: { stiffness: 200, damping: 15 } });
+  
+  const yProgress = interpolate(progress, [0, 0.2], [30, 0], { extrapolateLeft: 'clamp' });
+  const yOffset = spring({ frame, fps, from: 0, to: yProgress, config: { stiffness: 100, damping: 20 } });
 
   return (
     <div
@@ -42,7 +49,7 @@ export const CTA: React.FC<CTAProps> = ({ data, width, height }) => {
       <div
         style={{
           opacity: contentOpacity,
-          transform: `translateY(${spring(interpolate(progress, [0, 0.2], [30, 0], { extrapolateLeft: 'clamp' }), { stiffness: 100, damping: 20 })}px)`,
+          transform: `translateY(${yOffset}px)`,
           maxWidth: '80%',
         }}
       >

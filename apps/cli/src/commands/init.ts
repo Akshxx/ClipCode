@@ -1,8 +1,8 @@
 import { Command } from 'commander';
-import { writeFileSync, existsSync } from 'fs';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import chalk from 'chalk';
-import { Panel } from '../ui/Panel';
+import { Panel, info } from '../ui/Spinner';
 
 export const initCommand = new Command('init')
   .description('Initialize ClipCode in the current repository')
@@ -12,14 +12,15 @@ export const initCommand = new Command('init')
     const workflowPath = join(workflowDir, 'clipcode.yml');
 
     if (existsSync(workflowPath) && !options.yes) {
-      const { overwrite } = await import('prompts').then(m => m.default)({
+      const prompts = await import('prompts');
+      const { overwrite } = await prompts.default({
         type: 'confirm',
         name: 'overwrite',
         message: 'GitHub Action workflow already exists. Overwrite?',
         initial: false,
       });
       if (!overwrite) {
-        console.log(Panel.info('Skipped', ['Workflow file already exists']));
+        console.log(info('Skipped', ['Workflow file already exists']));
         return;
       }
     }
@@ -48,7 +49,7 @@ jobs:
     mkdirSync(workflowDir, { recursive: true });
     writeFileSync(workflowPath, workflow);
 
-    console.log(Panel.success('Initialized!', [
+    console.log(info('Initialized!', [
       `Created ${chalk.cyan('.github/workflows/clipcode.yml')}`,
       `Push a release to trigger video generation`,
       `Or run ${chalk.cyan('npx clipcode generate')} locally`,

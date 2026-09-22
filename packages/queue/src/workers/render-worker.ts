@@ -8,8 +8,8 @@ import { bundle } from '@remotion/bundler';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { tmpdir } from 'os';
-import { generateId } from '@clipcode/core/utils/helpers';
-import { uploadToR2 } from '@clipcode/crawler/artifacts';
+import { generateId } from '@clipcode/core';
+import { uploadToR2 } from '@clipcode/crawler';
 
 const prisma = new PrismaClient();
 
@@ -55,18 +55,16 @@ export async function startRenderWorker(): Promise<Worker<RenderJobData>> {
           inputProps: data,
           codec: 'h264',
           crf: 23,
-          preset: 'medium',
-          width: config.width || 1080,
-          height: config.height || 1920,
-          frameRate: config.fps || 30,
+          // width, height, frameRate are part of the composition (VideoConfig)
         });
 
         let videoUrl: string | undefined;
         let hostedUrl: string | undefined;
 
         if (r2Upload) {
-          videoUrl = await uploadToR2(outputPath, `renders/${projectId}/${renderId}.mp4`, 'video/mp4');
-          if (videoUrl) {
+          const uploadResult = await uploadToR2(outputPath, `renders/${projectId}/${renderId}.mp4`, 'video/mp4');
+          if (uploadResult) {
+            videoUrl = uploadResult;
             hostedUrl = `https://clipcode.dev/r/${renderId}`;
           }
         } else {

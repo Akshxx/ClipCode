@@ -1,21 +1,19 @@
-import { simpleGit, SimpleGit, ListLogLine } from 'simple-git';
+import { simpleGit, SimpleGit } from 'simple-git';
 import { join } from 'path';
 import type { Release } from '@clipcode/core';
 
-interface GitHubRepo {
-  stargazers_count?: number;
-  forks_count?: number;
+interface GitLogEntry {
+  date: string;
+  hash: string;
+  message: string;
+  author_name: string;
+  author_email: string;
 }
 
-interface GitHubContributor {
-  login: string;
-}
-
-interface GitHubRelease {
-  tag_name: string;
-  name?: string;
-  published_at: string;
-  html_url: string;
+interface GitLogResult {
+  all: GitLogEntry[];
+  latest: GitLogEntry | null;
+  total: number;
 }
 
 export class GitAnalyzer {
@@ -58,7 +56,7 @@ export class GitAnalyzer {
         headers: { Accept: 'application/vnd.github.v3+json' },
       });
       if (!response.ok) return 0;
-      const data = await response.json() as GitHubRepo;
+      const data = await response.json() as { stargazers_count?: number };
       return data.stargazers_count || 0;
     } catch {
       return 0;
@@ -78,7 +76,7 @@ export class GitAnalyzer {
         headers: { Accept: 'application/vnd.github.v3+json' },
       });
       if (!response.ok) return 0;
-      const data = await response.json() as GitHubRepo;
+      const data = await response.json() as { forks_count?: number };
       return data.forks_count || 0;
     } catch {
       return 0;
@@ -98,7 +96,7 @@ export class GitAnalyzer {
         headers: { Accept: 'application/vnd.github.v3+json' },
       });
       if (!response.ok) return 0;
-      const data = await response.json() as GitHubContributor[];
+      const data = await response.json() as Array<{ login: string }>;
       return Array.isArray(data) ? data.length : 0;
     } catch {
       return 0;
@@ -118,7 +116,7 @@ export class GitAnalyzer {
         headers: { Accept: 'application/vnd.github.v3+json' },
       });
       if (!response.ok) return [];
-      const data = await response.json() as GitHubRelease[];
+      const data = await response.json() as Array<{ tag_name: string; name?: string; published_at: string; html_url: string }>;
 
       return data.map((r) => ({
         tag: r.tag_name,
@@ -133,10 +131,10 @@ export class GitAnalyzer {
 
   private async getCommitFrequency(): Promise<number> {
     try {
-      const log = await this.git.log({ maxCount: 100, format: '%ai' });
+      const log = await this.git.log({ maxCount: 100, format: '%ai' }) as unknown as { all: Array<{ date: string }> };
       if (!log.all.length) return 0;
 
-      const dates = log.all.map((c: ListLogLine) => new Date(c.date).getTime()).sort((a, b) => b - a);
+      const dates = log.all.map((c) => new Date(c.date).getTime()).sort((a, b) => b - a);
       const now = Date.now();
       const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
 

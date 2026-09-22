@@ -228,6 +228,27 @@ export interface CtaData {
   liveUrl?: string;
 }
 
+export interface CrawlJob {
+  id: string;
+  url: string;
+  config: any;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  createdAt: Date;
+}
+
+export interface RenderJob {
+  id: string;
+  projectId: string;
+  template: string;
+  config: any;
+  status: 'queued' | 'rendering' | 'completed' | 'failed';
+  outputUrl?: string;
+  hostedUrl?: string;
+  error?: string;
+  createdAt: Date;
+  completedAt?: Date;
+}
+
 export interface AnalysisResult {
   repo: RepoAnalysis;
   live?: LiveCrawlData;

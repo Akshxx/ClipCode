@@ -2,10 +2,10 @@
   "name": "@clipcode/cli",
   "version": "0.0.0",
   "bin": {
-    "clipcode": "./bin/clipcode.js"
+    "clipcode": "./bin/clipcode"
   },
   "scripts": {
-    "build": "tsc && chmod +x bin/clipcode.js",
+    "build": "tsc && chmod +x bin/clipcode",
     "dev": "tsc --watch",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
@@ -20,11 +20,11 @@
     "prompts": "^2.4.2",
     "yaml": "^2.4.0",
     "@clipcode/core": "^0.0.0",
-    "@clipcode/core": "^0.0.0",
-    "@clipcode/core": "^0.0.0",
-    "@clipcode/core": "^0.0.0",
-    "@clipcode/core": "^0.0.0",
-    "@clipcode/core": "^0.0.0"
+    "@clipcode/analyzer": "^0.0.0",
+    "@clipcode/crawler": "^0.0.0",
+    "@clipcode/templates": "^0.0.0",
+    "@clipcode/queue": "^0.0.0",
+    "@clipcode/db": "^0.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

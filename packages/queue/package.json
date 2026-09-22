@@ -9,6 +9,16 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./queues": {
+      "types": "./dist/queues.d.ts",
+      "import": "./dist/queues.mjs",
+      "require": "./dist/queues.js"
+    },
+    "./workers/render-worker": {
+      "types": "./dist/workers/render-worker.d.ts",
+      "import": "./dist/workers/render-worker.mjs",
+      "require": "./dist/workers/render-worker.js"
     }
   },
   "scripts": {
@@ -21,7 +31,6 @@
   "dependencies": {
     "bullmq": "^5.0.0",
     "ioredis": "^5.3.0",
-    "@clipcode/core": "^0.0.0",
     "@clipcode/core": "^0.0.0"
   },
   "devDependencies": {

@@ -1,11 +1,22 @@
-export interface LighthouseScores {
-  performance: number;
-  accessibility: number;
-  bestPractices: number;
-  seo: number;
-  pwa: number;
-}
+export async function runLighthouseOnly(url: string) {
+  const lighthouse = (await import('lighthouse')).default;
+  const { launch } = await import('chrome-launcher');
 
-export async function runLighthouseOnly(url: string): Promise<any> {
-  return { lhr: { categories: { performance: { score: 0 }, accessibility: { score: 0 }, 'best-practices': { score: 0 }, seo: { score: 0 }, pwa: { score: 0 } } } };
+  const chrome = await launch({
+    chromeFlags: ['--headless', '--no-sandbox', '--disable-gpu'],
+  });
+
+  try {
+    const lighthouse = (await import('lighthouse')).default;
+    const runnerResult = await lighthouse(url, {
+      port: chrome.port,
+      onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'],
+      output: 'json',
+      logLevel: 'error',
+    });
+
+    return runnerResult?.lhr ?? null;
+  } finally {
+    await chrome.kill();
+  }
 }

@@ -17,3 +17,6 @@ events:
 default_permissions:
   contents: read
   issues: write
+
+# Optional: Webhook URL for receiving events
+# webhook_url: https://clipcode.dev/api/github-webhook

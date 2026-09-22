@@ -1,0 +1,22 @@
+# ClipCode GitHub Action - Generate launch video on release
+# Add this to your repo's .github/workflows/clipcode.yml
+
+name: ClipCode
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: clipcode/action@v1
+        with:
+          template: social-30s
+          # live-url: 'https://your-app.com'  # Optional: for live crawl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: launch-video
+          path: clipcode-output/*.mp4
